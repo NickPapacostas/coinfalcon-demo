@@ -4,10 +4,15 @@ require 'json'
 require 'pry'
 
 class CoinfalconExchange
+
+  def self.available_markets
+    ['IOT-BTC']
+  end
+
   def initialize(key, secret)
     @key = key
     @secret = secret
-    @end_point = 'https://coinfalcon.com/api/v1/'
+    @end_point = 'https://staging.coinfalcon.com/api/v1/'
   end
 
   def headers(request_path, body, method)

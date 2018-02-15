@@ -1,32 +1,35 @@
 <h1>Eternal Limit Bot</h1>
 
-<form action="/" method="POST">
-
-  <div style="display: block">
-    Market:
-    <select name="market">
-      <option value="IOT-BTC">IOT-BTC</option>
-    </select>    
-  </div>
-
-
-  <div style="display: block">
-    Order Type:
-    <select name="order-type">
-      <option value="buy">Limit Buy</option>
-      <option value="sell">Limit Sell</option>
-    </select>
+<%= form_for @batch do |f| %>
+  <div>
+    <%= f.label :count %>
+    <%= f.number_field :count %>  
   </div>
 
   <div>
-    Percent limit:
-    <input name="percent" />
+    <%= f.label :market %>
+    <%= f.select :market, CoinfalconExchange.available_markets %>    
   </div>
 
   <div>
-    Amount per order:
-    <input name="amount" />
+    <%= f.label :order_type %>
+    <%= f.select :order_type, [['Buy', 'buy'], ['Sell', 'sell']] %>
   </div>
 
-  <button type="submit">Do it </button>
-</form>
+  <div>
+    <%= f.label :operation_type %>
+    <%= f.select :operation_type, [['Limit', 'limit_order'], ['Market', 'market_order']] %>
+  </div>
+
+  <div>
+    <%= f.label :percent %>
+    <%= f.number_field :percent %>  
+  </div>
+
+  <div>
+    <%= f.label :amount %>
+    <%= f.number_field :amount %>
+  </div>
+
+  <%= f.submit "create eternal limit orders" %>
+<% end %>
