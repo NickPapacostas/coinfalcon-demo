@@ -5,8 +5,8 @@ require 'pry'
 
 class CoinfalconExchange
 
-  def self.available_markets
-    ['IOT-BTC']
+  def self.new_client
+    CoinfalconExchange.new(ENV['CF_KEY'], ENV['CF_SECRET'])
   end
 
   def initialize(key, secret)
@@ -69,8 +69,10 @@ class CoinfalconExchange
     JSON.parse(result.body)
   end
 
-  def my_trades
-
+  def trades(market, since = nil)
+    url = @end_point + "markets/#{market}/trades"
+    url += "?since_time=#{since}" if since
+    JSON.parse(RestClient.get(url).body)
   end
 
   def create_order(body)

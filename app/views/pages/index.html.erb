@@ -8,7 +8,7 @@
 
   <div>
     <%= f.label :market %>
-    <%= f.select :market, CoinfalconExchange.available_markets %>    
+    <%= f.select :market, Market.available_markets %>    
   </div>
 
   <div>
@@ -33,3 +33,13 @@
 
   <%= f.submit "create eternal limit orders" %>
 <% end %>
+
+
+<div class='orders'>
+    <ul>
+      <%= @my_orders.each do |o| %>
+        <li class='order'><%= o.id %></li>
+      <% end %>
+    </ul>
+
+</div>
