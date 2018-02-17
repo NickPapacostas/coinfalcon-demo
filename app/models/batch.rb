@@ -2,6 +2,10 @@ class Batch < ApplicationRecord
   validates_presence_of :count, :market, :order_type, :operation_type, :percent, :amount
   has_many :orders
 
+  def create(cf_client = CoinfalconExchange.new_client)
+    self.save
+    generate_orders(cf_client)
+  end
 
   def create_on_coinfalcon(client = CoinfalconExchange.new_client)
     order_params = {
@@ -30,9 +34,20 @@ class Batch < ApplicationRecord
     end
   end
 
-  def create(cf_client = CoinfalconExchange.new_client)
-    self.save
-    generate_orders(cf_client)
+  def balance_orders(new_price, client = CoinfalconExchange.new_client)
+    active_orders = orders
+          .map {|o| client.order(o.coinfalcon_id)['data']}
+          .reject {|o| o['status'] == 'canceled'}
+    
+    # cancel orders where price is lower/higher than threshold
+    orders_cancelled = active_orders
+      .select {|o| passed_limit?(o['price'], new_price)}
+      .map {|o| client.cancel(o['coinfalcon_id'])}
+
+    # create orders to meet batch count
+    orders_cancelled.length.times do 
+      create_on_coinfalcon(client)
+    end
   end
 
   private 

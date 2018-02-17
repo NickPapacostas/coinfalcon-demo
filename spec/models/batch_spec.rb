@@ -47,11 +47,7 @@ RSpec.describe Batch do
   end
 
   describe "sell batches" do
-    let(:sell_batch) { 
-      b = batch.dup
-      b.order_type = 'sell'
-      b
-    }
+    let(:sell_batch) {b = batch.dup; b.order_type = 'sell'; b }
     
     let(:price) { 1 }
 
@@ -63,6 +59,33 @@ RSpec.describe Batch do
     it "correctly tests if passed limit" do
       expect(sell_batch.passed_limit?(price, price - 1)).to eq(true)
     end
+  end
+
+  describe "balance orders" do
+    let(:batch_with_orders) {
+      batch.save
+      batch.orders = [
+        Order.create(batch_id: batch.id, coinfalcon_id: '1'),
+        Order.create(batch_id: batch.id, coinfalcon_id: '2'),
+        Order.create(batch_id: batch.id, coinfalcon_id: '2')
+      ]
+      batch
+    }
+
+    it "cancels and creates new orders if passed limit" do
+      client = double()
+      allow(client).to receive(:order).and_return(
+        {'data' => {'status' => 'canceled', 'price' => 10, 'order_type' => 'buy', 'id' => 1}},
+        {'data' => {'status' => 'pending', 'price' => 10, 'order_type' => 'buy', 'id' => 2}},
+        {'data' => {'status' => 'pending', 'price' => 10, 'order_type' => 'buy', 'id' => 3}}
+      )
+      expect(client).to receive(:cancel).exactly(2).times
+      expect(client).to receive(:create_order).exactly(2).times
+        .and_return({'data' => {'status' => 'pending', 'price' => 10, 'order_type' => 'buy', 'id' => 4}})
+
+      batch_with_orders.balance_orders(11, client)
+    end
+
   end
 
 end

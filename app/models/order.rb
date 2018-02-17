@@ -6,8 +6,7 @@ class Order < ApplicationRecord
     if coinfalcon_id = result['data']['id']
       Order.create(batch_id: batch_id, coinfalcon_id: coinfalcon_id)
     else
-      puts "Could not create order"
-      puts result.inspect
+      raise "Could not create order #{result.inspect}"
     end
   end
 end
