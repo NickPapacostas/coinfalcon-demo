@@ -37,7 +37,7 @@ RSpec.describe Batch do
 
 
     it "correctly sets threshold" do
-      correct_threshold = (1 + (buy_batch.percent / 100.0)) * price
+      correct_threshold = Order.to_price((1 - (buy_batch.percent / 100.0)) * price)
       expect(buy_batch.threshold(price)).to eq(correct_threshold)
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Batch do
     let(:price) { 1 }
 
     it "correctly sets threshold" do
-      correct_threshold = (1 - (sell_batch.percent / 100.0)) * price
+      correct_threshold = Order.to_price((1 + (sell_batch.percent / 100.0)) * price)
       expect(sell_batch.threshold(price)).to eq(correct_threshold)
     end
 

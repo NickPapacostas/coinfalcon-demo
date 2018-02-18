@@ -37,7 +37,7 @@ class Market
     one_week_ago = (Time.now - 1.weeks).utc.iso8601 
     recent_trades = CoinfalconExchange.new_client.trades(market, one_week_ago)['data']
     if !recent_trades.empty?
-      recent_trades[0]['price']
+      recent_trades[0]['price'].to_f
     end
   end
 

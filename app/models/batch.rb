@@ -28,9 +28,9 @@ class Batch < ApplicationRecord
 
   def threshold(price = Market.price('IOT-BTC'))
     if order_type == 'buy'
-      (price * (1 + (percent / 100.0 )))
+      Order.to_price(price * (1 - (percent / 100.0 )))
     else
-      (price * (1 - (percent / 100.0 )))
+      Order.to_price(price * (1 + (percent / 100.0 )))
     end
   end
 
