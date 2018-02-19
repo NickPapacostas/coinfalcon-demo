@@ -1,7 +1,7 @@
 class BatchesController < ApplicationController
   def create
     @batch = Batch.new(batch_params)
-    if @batch.save
+    if @batch.create
       flash[:notice] = "created"
     else
       flash[:error] = "not created"
