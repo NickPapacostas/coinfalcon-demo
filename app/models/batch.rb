@@ -1,24 +1,30 @@
 class Batch < ApplicationRecord
-  validates_presence_of :count, :market, :order_type, :operation_type, :percent, :amount
-  has_many :orders
+  validates_presence_of :count, :market, :order_type, :operation_type, :percent, :amount, :current_price
+  has_many :orders, dependent: :destroy
 
   def create(cf_client = CoinfalconExchange.new_client)
+    self.current_price = threshold
     self.save
     generate_orders(cf_client)
   end
 
   def create_on_coinfalcon(client = CoinfalconExchange.new_client)
+    current_price = Market.price(market)
     order_params = {
       market: market,
       order_type: order_type,
       operation_type: operation_type,
       size: amount.to_s,
-      price: threshold.to_s
+      price: Order.to_price(threshold.to_s)
     }
+    self.current_price = current_price.to_s
+    self.save
     Order.create_on_coinfalcon(self.id, order_params, client)
   end
 
   def passed_limit?(order_price, new_price)
+    order_price = Order.to_price(order_price)
+    new_price = Order.to_price(new_price)
     if order_type == 'buy'
       new_price > order_price
     else
@@ -28,13 +34,15 @@ class Batch < ApplicationRecord
 
   def threshold(price = Market.price('IOT-BTC'))
     if order_type == 'buy'
-      Order.to_price(price * (1 - (percent / 100.0 )))
+      (price * (1 - (percent / 100.0 )))
     else
-      Order.to_price(price * (1 + (percent / 100.0 )))
+      (price * (1 + (percent / 100.0 )))
     end
   end
 
   def balance_orders(new_price, client = CoinfalconExchange.new_client)
+    ActionCable.server.broadcast 'batches', message: "Balancing orders for #{self.id}, #{self.market}"
+
     active_orders = orders
           .map {|o| client.order(o.coinfalcon_id)['data']}
           .reject {|o| o['status'] == 'canceled'}
@@ -42,7 +50,7 @@ class Batch < ApplicationRecord
     # cancel orders where price is lower/higher than threshold
     orders_cancelled = active_orders
       .select {|o| passed_limit?(o['price'], new_price)}
-      .map {|o| client.cancel(o['coinfalcon_id'])}
+      .map {|o| Order.find_by(coinfalcon_id: o['id']).destroy }
 
     # create orders to meet batch count
     orders_cancelled.length.times do 

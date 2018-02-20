@@ -1,9 +1,5 @@
-require 'awesome_print'
-require 'rest-client'
-require 'json'
-require 'pry'
-
 class CoinfalconExchange
+  extend GluttonRatelimit
 
   def self.new_client
     CoinfalconExchange.new(ENV['CF_KEY'], ENV['CF_SECRET'])
@@ -139,4 +135,6 @@ class CoinfalconExchange
     JSON.parse(result.body)
   end
 
+  # one request per two seconds
+  rate_limit :get_signature, 1, 2
 end
