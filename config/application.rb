@@ -13,7 +13,11 @@ module Coinfalcon
 
     # config.active_job.queue_adapter = :delayed_job
     
+    config.autoload_paths << "#{Rails.root}/app/lib/**/*.rb"
+
     config.eager_load = true
+
+    config.action_cable.mount_path = '/websocket'
     
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/helios-technologies/skeleton-rails
+  revision: 6e46649d29006643b33c95b82bc9d0e28df2f8cc
+  specs:
+    skeleton-rails (1.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -77,6 +83,7 @@ GEM
     ffi (1.9.21)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    glutton_ratelimit (0.2.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.9.5)
@@ -141,6 +148,7 @@ GEM
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    redis (4.0.1)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -224,16 +232,19 @@ DEPENDENCIES
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
   delayed_job_active_record
+  glutton_ratelimit
   jbuilder (~> 2.5)
   json
   listen (>= 3.0.5, < 3.2)
   pry
   puma (~> 3.7)
   rails (~> 5.1.5)
+  redis
   rest-client
   rspec-rails
   sass-rails (~> 5.0)
   selenium-webdriver
+  skeleton-rails!
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3

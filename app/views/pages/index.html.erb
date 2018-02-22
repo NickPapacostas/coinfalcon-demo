@@ -1,45 +1,68 @@
-<h1>Eternal Limit Bot</h1>
+<div class="batch-form grid-item u-full-width">
+  <h4 class="form-title">Create a new batch</h4>
+  <%= form_for @batch do |f| %>
+    <div class="form-field u-full-width">
+      <%= f.number_field :count, min: 0, placeholder: 'Number of orders', required: true %>  
+    </div>
 
-<%= form_for @batch do |f| %>
-  <div>
-    <%= f.label :count %>
-    <%= f.number_field :count %>  
-  </div>
+    <div class="form-field u-full-width">
+      <%= f.select :market, Market.available_markets, include_blank: 'Market' %>    
+    </div>
 
-  <div>
-    <%= f.label :market %>
-    <%= f.select :market, Market.available_markets %>    
-  </div>
+    <div class="form-field u-full-width">
+      <%= f.select :order_type, [['Buy', 'buy'], ['Sell', 'sell']], include_blank: 'Order Type' %>
+    </div>
 
-  <div>
-    <%= f.label :order_type %>
-    <%= f.select :order_type, [['Buy', 'buy'], ['Sell', 'sell']] %>
-  </div>
+    <div class="form-field u-full-width">
+      <%= f.select :operation_type, [['Limit', 'limit_order']], include_blank: 'Operation Type' %>
+    </div>
 
-  <div>
-    <%= f.label :operation_type %>
-    <%= f.select :operation_type, [['Limit', 'limit_order'], ['Market', 'market_order']] %>
-  </div>
+    <div class="form-field u-full-width">
+      <%= f.number_field :percent, min: 1, step: :any, placeholder: "Percent", required: true %>  
+    </div>
 
-  <div>
-    <%= f.label :percent %>
-    <%= f.number_field :percent %>  
-  </div>
+    <div class="form-field u-full-width">
+      <%= f.number_field :amount, step: :any, placeholder: 'Amount', required: true %>
+    </div>
 
-  <div>
-    <%= f.label :amount %>
-    <%= f.number_field :amount %>
-  </div>
-
-  <%= f.submit "create eternal limit orders" %>
-<% end %>
-
-
-<div class='orders'>
-    <ul>
-      <%= @my_orders.each do |o| %>
-        <li class='order'><%= o.id %></li>
-      <% end %>
-    </ul>
-
+    <div>
+      <%= f.submit "Create", {class: "button-primary", id: "create-batch-submit"} %>
+      <div id='create-batch-spinner'>
+        <svg width="100px"  height="100px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-infinity" style="background: none;"><path fill="none" ng-attr-stroke="{{config.stroke}}" ng-attr-stroke-width="{{config.width}}" ng-attr-stroke-dasharray="{{config.dasharray}}" d="M24.3,30C11.4,30,5,43.3,5,50s6.4,20,19.3,20c19.3,0,32.1-40,51.4-40 C88.6,30,95,43.3,95,50s-6.4,20-19.3,20C56.4,70,43.6,30,24.3,30z" stroke="#529de8" stroke-width="2" stroke-dasharray="2.5658892822265624 2.5658892822265624"><animate attributeName="stroke-dashoffset" calcMode="linear" values="0;256.58892822265625" keyTimes="0;1" dur="0.01" begin="0s" repeatCount="indefinite"></animate></path></svg>
+      </div>
+    </div>
+  <% end %>  
 </div>
+
+<table class="batches grid-item u-full-width">
+  <thead>
+    <tr>
+      <th class="batch-current-price">Current Limit Price</th>
+      <th class="batch-market-price">Current Market Price</th>
+      <th class="batch-count">Order Count</th>
+      <th class="batch-market">Market</th>
+      <th class="batch-order-type">Order Type</th>
+      <th class="batch-operation-type">Operation Type</th>
+      <th class="batch-percent">Percent</th>
+      <th class="batch-amount">Amount</th>
+      <th class="batch-orders">Order Ids </th>
+    </tr>      
+  </thead>
+  <tbody>
+    <% @batches.each do |batch| %>
+      <tr class='batch' data-a-batch=<%= batch.id %>> 
+        <td><%= batch.current_price %></td>
+        <td><%= @markets[batch.market] %></td>
+        <td><%= batch.count %></td>
+        <td><%= batch.market %></td>
+        <td><%= batch.order_type %></td>
+        <td><%= batch.operation_type %></td>
+        <td><%= batch.percent %></td>
+        <td><%= batch.amount %></td>
+        <td class="orders"><%= batch.orders.map {|o| o.coinfalcon_id }.join(", ") %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

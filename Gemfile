@@ -14,6 +14,9 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'delayed_job_active_record'
+gem 'glutton_ratelimit'
+
+gem 'skeleton-rails', :git => 'https://github.com/helios-technologies/skeleton-rails'
 
 
 group :development, :test do

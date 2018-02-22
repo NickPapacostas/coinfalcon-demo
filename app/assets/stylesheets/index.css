@@ -1,0 +1,138 @@
+body {
+  background-color: white;
+}
+
+/*DESKTOP*/
+@media (min-width: 1281px) {
+  .container {
+    display: grid;
+    max-width: 80%;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 10% 90%;
+    text-align: center;
+  }
+
+  .grid-item {
+    background-color: #f2f5f7;
+    margin: 0 10%;
+    border-radius: 10px;
+  }
+
+  .title {
+    grid-column-start: 1;
+    grid-column-end: end;
+  }
+
+  .batch-form {
+    grid-column-start: 1;
+    grid-column-end: auto;
+    grid-row-start: 2;
+    text-align: center;
+    padding: 10%;
+  }
+
+  .batches {
+    grid-column-start: 2;
+    grid-column-end: auto;
+    grid-row-start: 2;
+    table-layout: fixed;
+    text-align: center !important;
+
+  }
+
+}
+
+
+/*MOBILE*/
+@media (max-width: 1280px) {
+  .container {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 10% 30% 60%;
+    text-align: center;
+  }
+
+  .grid-item {
+    background-color: #f2f5f7;
+    border-radius: 10px;
+  }
+
+  .title {
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+
+  .batch-form {
+    grid-row: 3;
+    grid-column: 1;
+    text-align: center;
+  }
+
+  .batches {
+    grid-row-start: 2;
+    grid-column: 1;
+    table-layout: fixed;
+    text-align: center !important;
+
+  }
+
+}
+
+/*GENERAL*/
+
+input { text-align: center; }
+
+.batch-form #create-batch-spinner {
+  display: none;
+}
+
+.batches th, td {
+  text-align: center; 
+}
+
+.batches td {
+  white-space: nowrap;
+  overflow: hidden
+  text-overflow: ellipsis;
+}
+
+.batches td.orders {
+  overflow-x: scroll;
+  text-overflow: auto;
+}
+
+.batch-current-price {
+  width: 12%;
+}
+
+.batch-market-price {
+  width: 12%;
+}
+
+.batch-count {
+  width: 8%;
+}
+
+.batch-market {
+  width: 12%;
+}
+
+.batch-order-type {
+  width: 8%;
+}
+
+.batch-operation-type {
+  width: 12%;
+}
+
+.batch-percent {
+  width: 7%;
+}
+
+.batch-amount {
+  width: 8%;
+}
+
+.batch-orders {
+  width: auto;
+}

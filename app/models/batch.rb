@@ -3,21 +3,23 @@ class Batch < ApplicationRecord
   has_many :orders, dependent: :destroy
 
   def create(cf_client = CoinfalconExchange.new_client)
-    self.current_price = threshold
-    self.save
-    generate_orders(cf_client)
+    if valid?
+      self.current_price = threshold
+      self.save
+      generate_orders(cf_client)
+    end
   end
 
   def create_on_coinfalcon(client = CoinfalconExchange.new_client)
-    current_price = Market.price(market)
+    price = Order.to_price(threshold.to_s)
     order_params = {
       market: market,
       order_type: order_type,
       operation_type: operation_type,
       size: amount.to_s,
-      price: Order.to_price(threshold.to_s)
+      price: price
     }
-    self.current_price = current_price.to_s
+    self.current_price = price
     self.save
     Order.create_on_coinfalcon(self.id, order_params, client)
   end
@@ -56,6 +58,10 @@ class Batch < ApplicationRecord
     orders_cancelled.length.times do 
       create_on_coinfalcon(client)
     end
+  end
+
+  def error_messages
+    errors.messages.map{|k,v| "#{k}: #{v[0]}" }.join(', ')
   end
 
   private 
