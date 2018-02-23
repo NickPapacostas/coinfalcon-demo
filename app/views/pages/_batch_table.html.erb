@@ -1,0 +1,30 @@
+<table class="batches grid-item u-full-width">
+  <thead>
+    <tr>
+      <th class="batch-current-price">Current Limit Price</th>
+      <th class="batch-market-price">Current Market Price</th>
+      <th class="batch-count">Order Count</th>
+      <th class="batch-market">Market</th>
+      <th class="batch-order-type">Order Type</th>
+      <th class="batch-percent">Percent</th>
+      <th class="batch-amount">Amount</th>
+      <th class="batch-orders">Order Ids </th>
+    </tr>      
+  </thead>
+  <tbody>
+    <% batches.each do |batch| %>
+      <tr class='batch' data-a-batch=<%= batch.id %>> 
+        <td class='current-price'><%= batch.current_price %></td>
+        <td><%= markets[batch.market] %></td>
+        <td><%= batch.count %></td>
+        <td><%= batch.market %></td>
+        <td><%= batch.order_type %></td>
+        <td><%= batch.percent %></td>
+        <td><%= batch.amount %></td>
+        <td class="orders"><%= batch.orders.map {|o| o.coinfalcon_id }.join(", ") %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

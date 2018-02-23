@@ -4,7 +4,11 @@ class Order < ApplicationRecord
   before_destroy :cancel
 
   def self.to_price(price)
-    "%.5f" % price.to_f
+    ("%.5f" % price).to_f
+  end
+
+  def get_from_coinfalcon(client = CoinfalconExchange.new_client)
+    client.order(self.coinfalcon_id)
   end
 
   def self.create_on_coinfalcon(batch_id, order_params, client = CoinfalconExchange.new_client)

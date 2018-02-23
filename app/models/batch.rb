@@ -4,20 +4,20 @@ class Batch < ApplicationRecord
 
   def create(cf_client = CoinfalconExchange.new_client)
     if valid?
-      self.current_price = threshold
+      self.current_price = Order.to_price(threshold)
       self.save
       generate_orders(cf_client)
     end
   end
 
   def create_on_coinfalcon(client = CoinfalconExchange.new_client)
-    price = Order.to_price(threshold.to_s)
+    price = Order.to_price(threshold)
     order_params = {
       market: market,
       order_type: order_type,
       operation_type: operation_type,
       size: amount.to_s,
-      price: price
+      price: price.to_s
     }
     self.current_price = price
     self.save
@@ -26,15 +26,23 @@ class Batch < ApplicationRecord
 
   def passed_limit?(order_price, new_price)
     order_price = Order.to_price(order_price)
-    new_price = Order.to_price(new_price)
+    new_price   = Order.to_price(new_price)
     if order_type == 'buy'
-      new_price > order_price
-    else
       new_price < order_price
+    else
+      new_price > order_price
     end
   end
 
-  def threshold(price = Market.price('IOT-BTC'))
+  def original_price
+    if order_type == 'buy'
+      (current_price * (1 + (percent / 100.0 )))
+    else
+      (current_price * (1 - (percent / 100.0 )))
+    end
+  end
+
+  def threshold(price = Market.price(market))
     if order_type == 'buy'
       (price * (1 - (percent / 100.0 )))
     else
@@ -43,21 +51,37 @@ class Batch < ApplicationRecord
   end
 
   def balance_orders(new_price, client = CoinfalconExchange.new_client)
-    ActionCable.server.broadcast 'batches', message: "Balancing orders for #{self.id}, #{self.market}"
-
     active_orders = orders
           .map {|o| client.order(o.coinfalcon_id)['data']}
           .reject {|o| o['status'] == 'canceled'}
     
     # cancel orders where price is lower/higher than threshold
     orders_cancelled = active_orders
-      .select {|o| passed_limit?(o['price'], new_price)}
+      .select {|o| passed_limit?(original_price, new_price)}
       .map {|o| Order.find_by(coinfalcon_id: o['id']).destroy }
 
+
+
     # create orders to meet batch count
-    orders_cancelled.length.times do 
-      create_on_coinfalcon(client)
+    unless orders_cancelled.empty?
+      orders_cancelled.length.times do 
+        create_on_coinfalcon(client)
+      end
+
+      self.current_price = Order.to_price(threshold(new_price))
+      self.save
+      broadcast_update()
     end
+  end
+
+  def broadcast_update 
+    ActionCable.server.broadcast 'batches', 
+      message: "balanced", 
+      data: {
+        batch_id: id, 
+        new_order_ids: orders.reload.map(&:coinfalcon_id),
+        new_price: self.current_price
+      }
   end
 
   def error_messages

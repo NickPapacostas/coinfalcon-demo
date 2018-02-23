@@ -14,7 +14,7 @@ body {
 
   .grid-item {
     background-color: #f2f5f7;
-    margin: 0 10%;
+    margin: 0 5%;
     border-radius: 10px;
   }
 
@@ -50,6 +50,7 @@ body {
     grid-template-columns: 100%;
     grid-template-rows: 10% 30% 60%;
     text-align: center;
+    width: 95%;
   }
 
   .grid-item {
@@ -63,10 +64,13 @@ body {
   }
 
   .batch-form {
+    font-size: 1.5em;
     grid-row: 3;
     grid-column: 1;
     text-align: center;
   }
+
+  #batch-form-market-price {font-size: .5em;}
 
   .batches {
     grid-row-start: 2;
@@ -94,6 +98,11 @@ input { text-align: center; }
   white-space: nowrap;
   overflow: hidden
   text-overflow: ellipsis;
+  font-size: .8em;
+}
+
+.batches tr.updated {
+  background-color: #bcfbbc;
 }
 
 .batches td.orders {
@@ -119,10 +128,6 @@ input { text-align: center; }
 
 .batch-order-type {
   width: 8%;
-}
-
-.batch-operation-type {
-  width: 12%;
 }
 
 .batch-percent {

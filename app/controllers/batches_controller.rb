@@ -2,7 +2,7 @@ class BatchesController < ApplicationController
   def create
     @batch = Batch.new(batch_params)
     if @batch.create
-      flash[:notice] = "Batch with #{@batch.orders.count} orders created"
+      flash[:notice] = "Batch (#{@batch.order_type}) with #{@batch.orders.count} orders created"
     else
       flash[:error] = @batch.error_messages
     end

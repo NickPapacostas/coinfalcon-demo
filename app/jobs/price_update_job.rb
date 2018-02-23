@@ -2,7 +2,7 @@ class PriceUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(old_prices = Market.empty_with_price)
-    new_prices = Market.all_with_price
+    new_prices = Market.all_with_price(cf: client, force_update: true)
     old_prices.each do |market, old_price|
       if old_price != new_prices[market]
         new_price = new_prices[market]

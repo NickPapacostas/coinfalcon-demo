@@ -1,0 +1,45 @@
+<div class="batch-form grid-item u-full-width">
+  <h4 class="form-title">New batch of orders</h4>
+  <%= form_for batch do |f| %>
+    <div class="form-field u-full-width">
+      <%= f.number_field :count, min: 0, placeholder: 'Number of orders', required: true %>  
+    </div>
+
+    <div class="form-field u-full-width">
+      <div id="batch-form-market-price">
+        current price <%= markets && markets[Market.available_markets.first] %>
+      </div>
+
+      <%= f.select(:market) do %>
+        <% Market.available_markets.each do |m| %>
+          <%= content_tag(:option, m, value: m, "data-price" => markets[m], id: m) %>
+        <% end %>
+      <% end %>
+    </div>
+
+
+    <div class="form-field u-full-width">
+      <%= f.select :order_type, [['Buy', 'buy'], ['Sell', 'sell']], include_blank: 'Order Type' %>
+    </div>
+
+    <div class="form-field u-full-width">
+      <%= f.select :operation_type, [['Limit', 'limit_order']], include_blank: 'Operation Type' %>
+    </div>
+
+    <div class="form-field u-full-width">
+      <%= f.number_field :percent, id: 'batch-form-percent', min: 1, step: :any, placeholder: "Percent", required: true %>  
+    </div>
+
+
+    <div class="form-field u-full-width">
+      <%= f.number_field :amount, step: :any, placeholder: 'Amount', required: true %>
+    </div>
+
+    <div>
+      <%= f.submit "Create", {class: "button-primary", id: "create-batch-submit"} %>
+      <div id='create-batch-spinner'>
+        <svg width="100px"  height="100px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-infinity" style="background: none;"><path fill="none" ng-attr-stroke="{{config.stroke}}" ng-attr-stroke-width="{{config.width}}" ng-attr-stroke-dasharray="{{config.dasharray}}" d="M24.3,30C11.4,30,5,43.3,5,50s6.4,20,19.3,20c19.3,0,32.1-40,51.4-40 C88.6,30,95,43.3,95,50s-6.4,20-19.3,20C56.4,70,43.6,30,24.3,30z" stroke="#529de8" stroke-width="2" stroke-dasharray="2.5658892822265624 2.5658892822265624"><animate attributeName="stroke-dashoffset" calcMode="linear" values="0;256.58892822265625" keyTimes="0;1" dur="0.01" begin="0s" repeatCount="indefinite"></animate></path></svg>
+      </div>
+    </div>
+  <% end %>  
+</div>
