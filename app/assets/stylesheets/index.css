@@ -84,6 +84,7 @@ body {
 
 /*GENERAL*/
 
+
 input { text-align: center; }
 
 .batch-form #create-batch-spinner {
@@ -140,4 +141,26 @@ input { text-align: center; }
 
 .batch-orders {
   width: auto;
+}
+
+.batch-destroy {
+  width: 2%;
+}
+
+td.batch-destroy {
+  border-right: 2px solid #e0e3e4;
+  padding: 3px;
+  /*font-weight: bold;*/
+  font-size: 1.2em;
+}
+
+td.batch-destroy a:hover {
+  /*background-color: #f96680;*/
+  cursor: pointer;  
+  font-weight: bold;
+}
+
+td.batch-destroy a {
+  color: #f96680;
+  text-decoration: none;
 }

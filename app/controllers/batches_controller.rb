@@ -10,6 +10,18 @@ class BatchesController < ApplicationController
     redirect_to root_path
   end
 
+  def destroy
+    @batch = Batch.find(params[:id])
+    order_count = @batch.orders.count
+    if @batch.destroy
+      flash[:notice] = "Batch #{params[:id]} and #{order_count} orders destroyed"
+    else
+      flash[:error] = @batch.error_messages
+    end
+
+    redirect_to root_path
+  end
+
   private 
 
   def batch_params

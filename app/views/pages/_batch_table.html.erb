@@ -1,6 +1,7 @@
 <table class="batches grid-item u-full-width">
   <thead>
     <tr>
+      <th class="batch-destroy"></th>
       <th class="batch-current-price">Current Limit Price</th>
       <th class="batch-market-price">Current Market Price</th>
       <th class="batch-count">Order Count</th>
@@ -14,6 +15,9 @@
   <tbody>
     <% batches.each do |batch| %>
       <tr class='batch' data-a-batch=<%= batch.id %>> 
+        <td class='batch-destroy'>
+          <a href="/batches/<%= batch.id %>" data-method="delete">x</a>
+        </td> 
         <td class='current-price'><%= batch.current_price %></td>
         <td><%= markets[batch.market] %></td>
         <td><%= batch.count %></td>
