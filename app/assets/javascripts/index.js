@@ -1,7 +1,8 @@
 function addEventListeners() {
   
+  const createForm = document.querySelector('.new_batch')
   const createButton = document.querySelector('#create-batch-submit')
-  createButton.addEventListener('onsubmit', function(event) {
+  createForm.addEventListener('submit', function(event) {
     createButton.style.display = 'none'
     document.querySelector('#create-batch-spinner').style.display = 'initial'
   })

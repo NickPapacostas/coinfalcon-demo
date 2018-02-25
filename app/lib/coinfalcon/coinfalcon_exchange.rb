@@ -135,6 +135,6 @@ class CoinfalconExchange
     JSON.parse(result.body)
   end
 
-  # one request per two seconds
-  rate_limit :get_signature, 1, 2
+  # three requests / two seconds
+  rate_limit :get_signature, 3, 2
 end
