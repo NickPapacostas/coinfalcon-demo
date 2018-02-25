@@ -45,8 +45,10 @@ When a batch is updated for a new market price (which I've called ["balancing or
 1. `git clone https://github.com/NickPapacostas/coinfalcon-demo`
 2. `cd coinfalcon-demo`
 3. `bundle install`
-4. `redis-server &` 
-5. `rails s` 
+4. `rake db:create`
+5. `rake db:migrate`
+6. `redis-server &` 
+7. `rails s` 
 
 
 ## Testing
