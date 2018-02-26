@@ -29,7 +29,7 @@ Locally it is using Redis for the ActionCable pub/sub in order to allow testing 
 
 ### ActionCable
 
-When a batch is updated for a new market price (which I've called ["balancing orders"](app/models/batch.rb:53)) it will broadcast the new order_ids and new batch price to an ActionCable stream called "batches" on the frontend there is some [plain js](app/assets/javascripts/channels/batches_channel.rb) to update the view when a batch is "balanced". 
+When a batch is updated for a new market price (which I've called ["balancing orders"](app/models/batch.rb#L53)) it will broadcast the new order_ids and new batch price to an ActionCable stream called "batches" on the frontend there is some [plain js](app/assets/javascripts/channels/batches_channel.rb) to update the view when a batch is "balanced". 
 
 ### Notes
  
@@ -37,7 +37,7 @@ When a batch is updated for a new market price (which I've called ["balancing or
   - Any Coinfalcon requests are limited to 3 requests per 2 seconds (the Coinfalcon API limits requets to 3 / 1 second). 
 
 ##### Price formatting
-  - Due to the api requiring prices for limit orders to be no more than 5 units after the decimal (precision '%.5f') all orders are priced using [this convention](app/models/order.rb:6). 
+  - Due to the api requiring prices for limit orders to be no more than 5 units after the decimal (precision '%.5f') all orders are priced using [this convention](app/models/order.rb#L6). 
 
 
 ## install
