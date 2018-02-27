@@ -48,7 +48,8 @@ When a batch is updated for a new market price (which I've called ["balancing or
 4. `rake db:create`
 5. `rake db:migrate`
 6. `redis-server &` 
-7. `rails s` 
+7. set coinfalcon api key and secret as `CF_KEY` and `CF_SECRET`
+8. `rails s` 
 
 
 ## Testing
